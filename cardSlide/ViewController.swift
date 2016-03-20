@@ -44,22 +44,14 @@ class ViewController: UIViewController {
         toolbar.hidden = true
         
         //初期値設定
-        upperCardString = [["X1","U","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"],
-            ["X2","U","aaaaaaaaaaaaaaaaaaaaa"],
-            ["X3","U","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"],
-            ["X4","U","aaaaaaaaaaaaaaaaaaaaa"],
-            ["X5","U","aaaaaaaaaaaaaaaaaaaaa"]]
-        lowerCardString = [["X1","L","aaaaaaaaaaaaaaaaaaaaa"],
-            ["X2","L","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"],
-            ["X3","L","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"],
-            ["X4","L","aaaaaaaaaaaaaaaaaaaaa"]]
+        upperCardString = [["Label1","Label2","TextData"],
+            ["X2","U","aaaaaaaaaaaaaaaaaaaaa"]]
+        lowerCardString = [["Label1","Label2","TextData"],["X2","L","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"]]
         
         //page生成
         generateView()
         
-        //StoryBoardで生成したViewを外す
-//        upperCardView.removeFromSuperview()
-//        lowerCardView.removeFromSuperview()
+        //StoryBoardで生成したViewを隠す
         upperCardView.hidden = true
         lowerCardView.hidden = true
         
@@ -79,11 +71,11 @@ class ViewController: UIViewController {
             upperFileName = value_string!
             
             //ファイルを読み込み
-            upperCardString = []
-            upperCardString = readDocument(upperFileName)
-        } else {
-
+            if let retString = readDocument(upperFileName) {
+                upperCardString = retString
+            }
         }
+
         
         // Lower:すでに設定でテキストフィールドに入力されている場合
         if defaults.objectForKey("LowerFile") != nil {
@@ -91,11 +83,10 @@ class ViewController: UIViewController {
             let value_string = defaults.objectForKey("LowerFile") as? String
             lowerFileName = value_string!
             //ファイルを読み込み
-            lowerCardString = []
-            lowerCardString = readDocument(lowerFileName)
-
-        } else {
-
+//            lowerCardString = []
+            if let retString2 = readDocument(lowerFileName) {
+                lowerCardString = retString2
+            }
         }
         
 
@@ -103,11 +94,11 @@ class ViewController: UIViewController {
         removeAllSubviews(upperScrollView, jogaiSubView: upperCardView)
         removeAllSubviews(lowerScrollView, jogaiSubView: lowerCardView)
         //Viewの生成
-        generateView()
-    }
+            generateView()
+        }
     
     ///////ドキュメントフォルダのファイルを読み込む
-    func readDocument(fileName :String) -> [[String]] {
+    func readDocument(fileName :String) -> [[String]]? {
         
         var readString: [[String]] = []
         
@@ -121,21 +112,29 @@ class ViewController: UIViewController {
             print("Read!")
             do{
                 csvString = try NSString(contentsOfFile: csvPath, encoding: NSUTF8StringEncoding) as String
-            } catch let error as NSError {
+                
+                //１行ごとにカンマで分割し、改行コードを変換する
+                var lineIndex = 0
+                csvString.enumerateLines { (line, stop) -> () in
+                    readString.append(line.componentsSeparatedByString(","))
+                    readString[lineIndex][2] = readString[lineIndex][2].stringByReplacingOccurrencesOfString("¥n", withString: "\n")
+                    lineIndex++
+                    print(lineIndex)
+                }
+                print(readString)
+                return readString
+
+            }
+            //読み込み失敗
+            catch let error as NSError {
                 print(error.localizedDescription)
+                //読み込み失敗したらnilを返す
+                return nil
             }
-            //１行ごとにカンマで分割し、改行コードを変換する
-            var lineIndex = 0
-            csvString.enumerateLines { (line, stop) -> () in
-                readString.append(line.componentsSeparatedByString(","))
-                readString[lineIndex][2] = readString[lineIndex][2].stringByReplacingOccurrencesOfString("¥n", withString: "\n")
-                lineIndex++
-                print(lineIndex)
-            }
-            print(readString)
-            
+        } else {
+            //Dirがなかったらnilを返す
+            return nil
         }
-        return readString
 
     }
 

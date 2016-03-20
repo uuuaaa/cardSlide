@@ -313,7 +313,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CYm-VB-MCD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1044" y="1133"/>
+            <point key="canvasLocation" x="1034" y="954"/>
         </scene>
         <!--File Select Lower Table View Controller-->
         <scene sceneID="qkk-VC-xv3">
@@ -332,7 +332,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jkL-mq-RD2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="961" y="1553"/>
+            <point key="canvasLocation" x="1034" y="1573"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Hhb-25-91s">

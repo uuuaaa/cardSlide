@@ -14,6 +14,10 @@
 		9A10FC5F1C9D551C00E08D96 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9A10FC5D1C9D551C00E08D96 /* LaunchScreen.storyboard */; };
 		9A10FC6A1C9D551C00E08D96 /* cardSlideTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A10FC691C9D551C00E08D96 /* cardSlideTests.swift */; };
 		9A10FC751C9D551C00E08D96 /* cardSlideUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A10FC741C9D551C00E08D96 /* cardSlideUITests.swift */; };
+		9A10FC831C9D72B100E08D96 /* ViewCustom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A10FC821C9D72B100E08D96 /* ViewCustom.swift */; };
+		9A10FC851C9DC00300E08D96 /* FileSelectUpperTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A10FC841C9DC00300E08D96 /* FileSelectUpperTableViewController.swift */; };
+		9A10FC871C9DC02E00E08D96 /* FileSelectLowerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A10FC861C9DC02E00E08D96 /* FileSelectLowerTableViewController.swift */; };
+		9A10FC891C9DC3D000E08D96 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A10FC881C9DC3D000E08D96 /* SettingViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +51,10 @@
 		9A10FC701C9D551C00E08D96 /* cardSlideUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = cardSlideUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A10FC741C9D551C00E08D96 /* cardSlideUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cardSlideUITests.swift; sourceTree = "<group>"; };
 		9A10FC761C9D551C00E08D96 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9A10FC821C9D72B100E08D96 /* ViewCustom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewCustom.swift; sourceTree = "<group>"; };
+		9A10FC841C9DC00300E08D96 /* FileSelectUpperTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSelectUpperTableViewController.swift; sourceTree = "<group>"; };
+		9A10FC861C9DC02E00E08D96 /* FileSelectLowerTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSelectLowerTableViewController.swift; sourceTree = "<group>"; };
+		9A10FC881C9DC3D000E08D96 /* SettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +108,10 @@
 				9A10FC541C9D551C00E08D96 /* AppDelegate.swift */,
 				9A10FC561C9D551C00E08D96 /* ViewController.swift */,
 				9A10FC581C9D551C00E08D96 /* Main.storyboard */,
+				9A10FC881C9DC3D000E08D96 /* SettingViewController.swift */,
+				9A10FC841C9DC00300E08D96 /* FileSelectUpperTableViewController.swift */,
+				9A10FC861C9DC02E00E08D96 /* FileSelectLowerTableViewController.swift */,
+				9A10FC821C9D72B100E08D96 /* ViewCustom.swift */,
 				9A10FC5B1C9D551C00E08D96 /* Assets.xcassets */,
 				9A10FC5D1C9D551C00E08D96 /* LaunchScreen.storyboard */,
 				9A10FC601C9D551C00E08D96 /* Info.plist */,
@@ -258,6 +270,10 @@
 			files = (
 				9A10FC571C9D551C00E08D96 /* ViewController.swift in Sources */,
 				9A10FC551C9D551C00E08D96 /* AppDelegate.swift in Sources */,
+				9A10FC851C9DC00300E08D96 /* FileSelectUpperTableViewController.swift in Sources */,
+				9A10FC871C9DC02E00E08D96 /* FileSelectLowerTableViewController.swift in Sources */,
+				9A10FC831C9D72B100E08D96 /* ViewCustom.swift in Sources */,
+				9A10FC891C9DC3D000E08D96 /* SettingViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

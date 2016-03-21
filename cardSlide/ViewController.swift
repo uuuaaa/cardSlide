@@ -93,8 +93,10 @@ class ViewController: UIViewController {
         //SubViewを削除
         removeAllSubviews(upperScrollView, jogaiSubView: upperCardView)
         removeAllSubviews(lowerScrollView, jogaiSubView: lowerCardView)
+        
         //Viewの生成
-            generateView()
+        generateView()
+        
         }
     
     ///////ドキュメントフォルダのファイルを読み込む
@@ -149,7 +151,8 @@ class ViewController: UIViewController {
         
         //pageControl
         let pageControl = UIPageControl()
-        self.navigationItem.titleView = pageControl
+//        self.navigationItem.titleView = pageControl
+        upperPage = pageControl
         
         //viewの生成(Upper)
         for var i = 0; i < upperCardString.count; i++ {
@@ -164,11 +167,13 @@ class ViewController: UIViewController {
             
             upperScrollView.addSubview(genCardView)
             
-            //ラベルViewを設定
+            //ラベルView1を設定
             let genLabel1 = UILabel(frame: upperCVlabel1.frame)
             genCardView.addSubview(genLabel1)
+            //ラベルView2を設定
             let genLabel2 = UILabel(frame: upperCVlabel2.frame)
             genLabel2.textAlignment = upperCVlabel2.textAlignment
+            genLabel2.font = upperCVlabel2.font
             genCardView.addSubview(genLabel2)
             
             //テキストViewを設定
@@ -197,11 +202,13 @@ class ViewController: UIViewController {
             
             lowerScrollView.addSubview(genCardView)
             
-            //ラベルViewを設定
+            //ラベルView1を設定
             let genLabel1 = UILabel(frame: lowerCVlabel1.frame)
             genCardView.addSubview(genLabel1)
+            //ラベルView2を設定
             let genLabel2 = UILabel(frame: lowerCVlabel2.frame)
             genLabel2.textAlignment = lowerCVlabel2.textAlignment
+            genLabel2.font = lowerCVlabel2.font
             genCardView.addSubview(genLabel2)
             
             //テキストViewを設定
@@ -214,8 +221,13 @@ class ViewController: UIViewController {
             genLabel1.text = lowerCardString[i][0]
             genLabel2.text = lowerCardString[i][1]
             cardText.text = lowerCardString[i][2]
-            print("")
+            
         }
+        print("generate view")
+        //最初の表示位置の初期化
+        upperScrollView.contentOffset = CGPointMake(upperScrollView.contentOffset.x, 0);
+        lowerScrollView.contentOffset = CGPointMake(lowerScrollView.contentOffset.x, 0);
+
     }
     
     //親Viewの中のViewを削除
@@ -247,6 +259,10 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    //StatusBarの色
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return UIStatusBarStyle.LightContent
+    }
 
 }
 

@@ -21,6 +21,9 @@ class SettingViewController: UITableViewController {
     }
     
     override func viewWillAppear(animated: Bool) {
+        
+    //UserDefaultsに値があったら、表示に反映させる
+        
         //Defaultsの準備
         let defaults = NSUserDefaults.standardUserDefaults()
         // Upper:すでに設定でテキストフィールドに入力されている場合
@@ -36,6 +39,11 @@ class SettingViewController: UITableViewController {
             let value_string = defaults.objectForKey("LowerFile") as? String
             //detail欄へ入力
             lowerCardDetail.text = value_string!
+        }
+        
+    //選択状態の解除
+        if let indexPathForSelectedRow = tableView.indexPathForSelectedRow {
+            tableView.deselectRowAtIndexPath(indexPathForSelectedRow, animated: true)
         }
     }
 

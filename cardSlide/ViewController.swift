@@ -14,6 +14,7 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var lowerScrollView: UIScrollView!
     
     @IBOutlet weak var upperCardView: UIView!
+    @IBOutlet weak var upperCVlabelBG: UIView!
     @IBOutlet weak var upperCVlabel1: UILabel!
     @IBOutlet weak var upperCVlabel2: UILabel!
     @IBOutlet weak var upperCVtext: UITextView!
@@ -21,6 +22,7 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var upperPageLabel: UILabel!
 
     @IBOutlet weak var lowerCardView: UIView!
+    @IBOutlet weak var lowerCVlabelBG: UIView!
     @IBOutlet weak var lowerCVlabel1: UILabel!
     @IBOutlet weak var lowerCVlabel2: UILabel!
     @IBOutlet weak var lowerCVtext: UITextView!
@@ -175,30 +177,24 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         
         //viewの生成(Upper)
         for var i = 0; i < upperCardString.count; i++ {
-            
-            let genCardView = UIView(frame: upperCardView.frame)
-            genCardView.frame.origin.x = genCardView.frame.origin.x + (self.view.frame.size.width) * CGFloat(i)
-            genCardView.layer.borderWidth = upperCardView.layer.borderWidth
-            genCardView.layer.backgroundColor = upperCardView.layer.backgroundColor
-            genCardView.layer.borderColor = upperCardView.layer.borderColor
-            genCardView.layer.shadowColor = upperCardView.layer.shadowColor
-            genCardView.layer.shadowOpacity = upperCardView.layer.shadowOpacity
-            
+
+            //CardViewを複製
+            let genCardView = duplicateCardView(upperCardView, index: i)
             upperScrollView.addSubview(genCardView)
             
+            //ラベルの裏ビューを複製
+            let genLabelBG = duplicateBGView(upperCVlabelBG)
+            genCardView.addSubview(genLabelBG)
+            
             //ラベルView1を設定
-            let genLabel1 = UILabel(frame: upperCVlabel1.frame)
+            let genLabel1 = duplicateLabel(upperCVlabel1)
             genCardView.addSubview(genLabel1)
             //ラベルView2を設定
-            let genLabel2 = UILabel(frame: upperCVlabel2.frame)
-            genLabel2.textAlignment = upperCVlabel2.textAlignment
-            genLabel2.font = upperCVlabel2.font
+            let genLabel2 = duplicateLabel(upperCVlabel2)
             genCardView.addSubview(genLabel2)
             
             //テキストViewを設定
-            let cardText = UITextView(frame: upperCVtext.frame)
-            cardText.scrollEnabled = true
-            cardText.editable = false
+            let cardText = duplicateTextView(upperCVtext)
             genCardView.addSubview(cardText)
             
             //ラベルとテキストの中身を設定
@@ -210,30 +206,24 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         
         //viewの生成(lower)
         for var i = 0; i < lowerCardString.count; i++ {
-            
-            let genCardView = UIView(frame: lowerCardView.frame)
-            genCardView.frame.origin.x = genCardView.frame.origin.x + (self.view.frame.size.width) * CGFloat(i)
-            genCardView.layer.borderWidth = lowerCardView.layer.borderWidth
-            genCardView.layer.backgroundColor = lowerCardView.layer.backgroundColor
-            genCardView.layer.borderColor = lowerCardView.layer.borderColor
-            genCardView.layer.shadowColor = lowerCardView.layer.shadowColor
-            genCardView.layer.shadowOpacity = lowerCardView.layer.shadowOpacity
-            
+
+            //CardViewを複製
+            let genCardView = duplicateCardView(lowerCardView, index: i)
             lowerScrollView.addSubview(genCardView)
             
+            //ラベルの裏ビューを複製
+            let genLabelBG = duplicateBGView(lowerCVlabelBG)
+            genCardView.addSubview(genLabelBG)
+
             //ラベルView1を設定
-            let genLabel1 = UILabel(frame: lowerCVlabel1.frame)
+            let genLabel1 = duplicateLabel(lowerCVlabel1)
             genCardView.addSubview(genLabel1)
             //ラベルView2を設定
-            let genLabel2 = UILabel(frame: lowerCVlabel2.frame)
-            genLabel2.textAlignment = lowerCVlabel2.textAlignment
-            genLabel2.font = lowerCVlabel2.font
+            let genLabel2 = duplicateLabel(lowerCVlabel2)
             genCardView.addSubview(genLabel2)
             
             //テキストViewを設定
-            let cardText = UITextView(frame: lowerCVtext.frame)
-            cardText.scrollEnabled = true
-            cardText.editable = false
+            let cardText = duplicateTextView(lowerCVtext)
             genCardView.addSubview(cardText)
             
             //ラベルとテキストの中身を設定
@@ -249,6 +239,7 @@ class ViewController: UIViewController, UIScrollViewDelegate {
 
     }
     
+    ///////////部品////////////////////////
     //親Viewの中のViewを削除
     func removeAllSubviews(parentView: UIView){
         let subviews = parentView.subviews
@@ -265,6 +256,44 @@ class ViewController: UIViewController, UIScrollViewDelegate {
             }
         }
     }
+    ///////Viewの複製/////////
+    //CardViewの複製
+    func duplicateCardView (originalView: UIView, index i :Int) -> UIView {
+        let genCardView = UIView(frame: originalView.frame)
+        genCardView.frame.origin.x = genCardView.frame.origin.x + (self.view.frame.size.width) * CGFloat(i)
+        genCardView.layer.borderWidth = originalView.layer.borderWidth
+        genCardView.layer.backgroundColor = originalView.layer.backgroundColor
+        genCardView.layer.borderColor = originalView.layer.borderColor
+        genCardView.layer.shadowColor = originalView.layer.shadowColor
+        genCardView.layer.shadowOpacity = originalView.layer.shadowOpacity
+        genCardView.layer.shadowOffset = originalView.layer.shadowOffset
+        
+        return genCardView
+    }
+    //LabelBGの複製
+    func duplicateBGView (originalView: UIView) -> UIView {
+        let genView = UIView(frame: originalView.frame)
+        genView.backgroundColor = originalView.backgroundColor
+        genView.alpha = originalView.alpha
+        return genView
+    }
+    //Labelの複製
+    func duplicateLabel (originalLabel: UILabel) -> UILabel {
+        let genLabel = UILabel(frame: originalLabel.frame)
+        genLabel.font = originalLabel.font
+        genLabel.textAlignment = originalLabel.textAlignment
+        genLabel.textColor = originalLabel.textColor
+
+        return genLabel
+    }
+    //TextViewの複製
+    func duplicateTextView (orgTextView: UITextView) -> UITextView {
+        let cardText = UITextView(frame: orgTextView.frame)
+        cardText.scrollEnabled = true
+        cardText.editable = false
+        return cardText
+    }
+    
     
     //Windowをタッチしたら、ツールバーの表示・非表示を切り替える
     @IBAction func windowTouch(sender: AnyObject) {

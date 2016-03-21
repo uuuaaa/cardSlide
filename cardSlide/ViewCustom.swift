@@ -41,6 +41,18 @@ class ViewCustom: UIView {
             layer.shadowOpacity = Float(shadowOpacity)
         }
     }
+    
+    @IBInspectable var shadowOffsetWidth :CGFloat = 0 {
+        didSet {
+            layer.shadowOffset.width = shadowOffsetWidth
+        }
+    }
 
-        
+    @IBInspectable var shadowOffsetHeight :CGFloat = 0 {
+        didSet {
+            layer.shadowOffset.height = shadowOffsetHeight
+        }
+    }
+
+    
 }

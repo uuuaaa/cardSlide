@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UIScrollViewDelegate {
 
     @IBOutlet weak var upperScrollView: UIScrollView!
     @IBOutlet weak var lowerScrollView: UIScrollView!
@@ -18,12 +18,14 @@ class ViewController: UIViewController {
     @IBOutlet weak var upperCVlabel2: UILabel!
     @IBOutlet weak var upperCVtext: UITextView!
     @IBOutlet weak var upperPage: UIView!
+    @IBOutlet weak var upperPageLabel: UILabel!
 
     @IBOutlet weak var lowerCardView: UIView!
     @IBOutlet weak var lowerCVlabel1: UILabel!
     @IBOutlet weak var lowerCVlabel2: UILabel!
     @IBOutlet weak var lowerCVtext: UITextView!
     @IBOutlet weak var lowerPage: UIView!
+    @IBOutlet weak var lowerPageLabel: UILabel!
     
     @IBOutlet weak var toolbar: UIToolbar!
 
@@ -64,6 +66,14 @@ class ViewController: UIViewController {
         var upperFileName : String
         var lowerFileName :String
         
+        //delegateの設定
+        upperScrollView.delegate = self
+        lowerScrollView.delegate = self
+        
+        //ツールバーを隠す
+        toolbar.hidden = true
+
+        
         // Upper:すでに設定でテキストフィールドに入力されている場合
         if defaults.objectForKey("UpperFile") != nil {
             // キーに登録されている文字列を抽出，表示
@@ -97,6 +107,11 @@ class ViewController: UIViewController {
         //Viewの生成
         generateView()
         
+        //pageLabelの設定
+        upperPageLabel.text = "1 / \(upperCardString.count)"
+        lowerPageLabel.text = "1 / \(lowerCardString.count)"
+        
+
         }
     
     ///////ドキュメントフォルダのファイルを読み込む
@@ -143,9 +158,13 @@ class ViewController: UIViewController {
     //ScrollViewの中のPage生成
     func generateView () {
         
-        upperScrollView.contentSize = CGSizeMake((self.view.frame.size.width) * CGFloat(upperCardString.count), upperScrollView.frame.height)
+        //Page幅の設定
+        let pageWidth = self.view.frame.size.width
+        
+        //ScrollViewのサイズ設定
+        upperScrollView.contentSize = CGSizeMake(pageWidth * CGFloat(upperCardString.count), upperScrollView.frame.height)
         let lowerScrollViewHight = lowerScrollView.frame.height
-        lowerScrollView.contentSize = CGSizeMake((self.view.frame.size.width) * CGFloat(lowerCardString.count), lowerScrollViewHight)
+        lowerScrollView.contentSize = CGSizeMake(pageWidth * CGFloat(lowerCardString.count), lowerScrollViewHight)
         upperScrollView.bounds = upperScrollView.frame
         lowerScrollView.bounds = lowerScrollView.frame
         
@@ -247,10 +266,10 @@ class ViewController: UIViewController {
         }
     }
     
-    
+    //Windowをタッチしたら、ツールバーの表示・非表示を切り替える
     @IBAction func windowTouch(sender: AnyObject) {
-        
-        toolbar.hidden = false
+
+        toolbar.hidden = !toolbar.hidden
     }
 
     
@@ -262,6 +281,23 @@ class ViewController: UIViewController {
     //StatusBarの色
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return UIStatusBarStyle.LightContent
+    }
+    
+    @objc func scrollViewDidEndScrollingAnimation(scrollView: UIScrollView) {
+        
+        print("ScrollViewStop")
+    }
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        //Page数を取得して表示
+        let upperPageWidth = upperScrollView.frame.size.width
+        let upperCurrentPage = Int(floor((upperScrollView.contentOffset.x - upperPageWidth / 2) / upperPageWidth ) + 2)
+        print(upperCurrentPage)
+        let lowerPageWidth = lowerScrollView.frame.size.width
+        let lowerCurrentPage = Int(floor((lowerScrollView.contentOffset.x - lowerPageWidth / 2) / lowerPageWidth ) + 2)
+        print(lowerCurrentPage)
+        
+        upperPageLabel.text = "\(upperCurrentPage) / \(upperCardString.count)"
+        lowerPageLabel.text = "\(lowerCurrentPage) / \(lowerCardString.count)"
     }
 
 }

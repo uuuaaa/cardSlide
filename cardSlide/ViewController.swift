@@ -47,17 +47,17 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         //NavigationControllerの初期非表示
 //        self.navigationController?.navigationBarHidden = true
 //        self.navigationController?.toolbarHidden = true
-        toolbar.hidden = true
+//        toolbar.hidden = true
         
         //初期値設定
         upperCardString = [["Label1","Label2","TextData"],
             ["X2","U","aaaaaaaaaaaaaaaaaaaaa"]]
-        lowerCardString = [["Label1","Label2","TextData"],["X2","L","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"]]
+        lowerCardString = [["Label1","Label2","TextData"],["X2","L","aaaaaaaaaaaa"]]
 
         //ScrollViewサイズ設定
         settingScrollView()
         //page生成
-        generateView()
+//        generateView()
         
         //StoryBoardで生成したViewを隠す
         upperCardView.hidden = true
@@ -79,6 +79,8 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         //ツールバーを隠す
         toolbar.hidden = true
 
+        //
+        print("call of viewWillAppear")
         
         // Upper:すでに設定でテキストフィールドに入力されている場合
         if defaults.objectForKey("UpperFile") != nil {
@@ -142,9 +144,9 @@ class ViewController: UIViewController, UIScrollViewDelegate {
                     readString.append(line.componentsSeparatedByString(","))
                     readString[lineIndex][2] = readString[lineIndex][2].stringByReplacingOccurrencesOfString("¥n", withString: "\n")
                     lineIndex += 1
-                    print(lineIndex)
+//                    print(lineIndex)
                 }
-                print(readString)
+//                print(readString)
                 return readString
 
             }
@@ -164,7 +166,7 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     //ScrollViewの設定
     func settingScrollView () {
         //Page幅の設定
-        //let pageWidth = self.view.frame.size.width
+        //pageWidth = self.view.frame.size.width
         pageWidth = upperCardView.frame.size.width + CGFloat(pageMargin)
         
         //ScrollViewのサイズ設定
@@ -184,11 +186,6 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         upperScrollView.contentSize = CGSizeMake(pageWidth * CGFloat(upperCardString.count), upperScrollView.frame.height)
         lowerScrollView.contentSize = CGSizeMake(pageWidth * CGFloat(lowerCardString.count), lowerScrollView.frame.height)
 
-
-        //pageControl
-//        let pageControl = UIPageControl()
-//        self.navigationItem.titleView = pageControl
-//        upperPage = pageControl
         
         //viewの生成(Upper)
         
@@ -336,14 +333,15 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         
         print("ScrollViewStop")
     }
+    
+    //Page数の表示
     func scrollViewDidScroll(scrollView: UIScrollView) {
         //Page数を取得して表示
         let upperPageWidth = upperScrollView.frame.size.width
         let upperCurrentPage = Int(floor((upperScrollView.contentOffset.x - upperPageWidth / 2) / upperPageWidth ) + 2)
-        print(upperCurrentPage)
+
         let lowerPageWidth = lowerScrollView.frame.size.width
         let lowerCurrentPage = Int(floor((lowerScrollView.contentOffset.x - lowerPageWidth / 2) / lowerPageWidth ) + 2)
-        print(lowerCurrentPage)
         
         upperPageLabel.text = "\(upperCurrentPage) / \(upperCardString.count)"
         lowerPageLabel.text = "\(lowerCurrentPage) / \(lowerCardString.count)"

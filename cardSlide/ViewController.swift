@@ -37,6 +37,8 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     var upperCardString :[[String]] = []
 //    var lowerCardNumber : Int = 0
     var lowerCardString :[[String]] = []
+    var pageWidth :CGFloat = 0
+    let pageMargin :Float = 20
     
     //起動時
     override func viewDidLoad() {
@@ -51,7 +53,9 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         upperCardString = [["Label1","Label2","TextData"],
             ["X2","U","aaaaaaaaaaaaaaaaaaaaa"]]
         lowerCardString = [["Label1","Label2","TextData"],["X2","L","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"]]
-        
+
+        //ScrollViewサイズ設定
+        settingScrollView()
         //page生成
         generateView()
         
@@ -137,7 +141,7 @@ class ViewController: UIViewController, UIScrollViewDelegate {
                 csvString.enumerateLines { (line, stop) -> () in
                     readString.append(line.componentsSeparatedByString(","))
                     readString[lineIndex][2] = readString[lineIndex][2].stringByReplacingOccurrencesOfString("¥n", withString: "\n")
-                    lineIndex++
+                    lineIndex += 1
                     print(lineIndex)
                 }
                 print(readString)
@@ -157,26 +161,38 @@ class ViewController: UIViewController, UIScrollViewDelegate {
 
     }
 
+    //ScrollViewの設定
+    func settingScrollView () {
+        //Page幅の設定
+        //let pageWidth = self.view.frame.size.width
+        pageWidth = upperCardView.frame.size.width + CGFloat(pageMargin)
+        
+        //ScrollViewのサイズ設定
+        upperScrollView.bounds = CGRectMake(0, 0, pageWidth, upperScrollView.frame.height)
+        lowerScrollView.bounds = CGRectMake(0, 0, pageWidth, lowerScrollView.frame.height)
+        upperScrollView.frame.size.width = pageWidth
+        
+        //はみ出したカードも表示
+        upperScrollView.clipsToBounds = false
+        lowerScrollView.clipsToBounds = false
+        
+    }
     //ScrollViewの中のPage生成
     func generateView () {
         
-        //Page幅の設定
-        let pageWidth = self.view.frame.size.width
-        
-        //ScrollViewのサイズ設定
+        //コンテンツ量に合わせてScrollViewのサイズを確保
         upperScrollView.contentSize = CGSizeMake(pageWidth * CGFloat(upperCardString.count), upperScrollView.frame.height)
-        let lowerScrollViewHight = lowerScrollView.frame.height
-        lowerScrollView.contentSize = CGSizeMake(pageWidth * CGFloat(lowerCardString.count), lowerScrollViewHight)
-        upperScrollView.bounds = upperScrollView.frame
-        lowerScrollView.bounds = lowerScrollView.frame
-        
+        lowerScrollView.contentSize = CGSizeMake(pageWidth * CGFloat(lowerCardString.count), lowerScrollView.frame.height)
+
+
         //pageControl
-        let pageControl = UIPageControl()
+//        let pageControl = UIPageControl()
 //        self.navigationItem.titleView = pageControl
-        upperPage = pageControl
+//        upperPage = pageControl
         
         //viewの生成(Upper)
-        for var i = 0; i < upperCardString.count; i++ {
+        
+        for i in 0 ..< upperCardString.count {
 
             //CardViewを複製
             let genCardView = duplicateCardView(upperCardView, index: i)
@@ -205,7 +221,8 @@ class ViewController: UIViewController, UIScrollViewDelegate {
 
         
         //viewの生成(lower)
-        for var i = 0; i < lowerCardString.count; i++ {
+        for i in 0 ..< lowerCardString.count {
+//        for var i = 0; i < lowerCardString.count; i++ {
 
             //CardViewを複製
             let genCardView = duplicateCardView(lowerCardView, index: i)
@@ -259,8 +276,11 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     ///////Viewの複製/////////
     //CardViewの複製
     func duplicateCardView (originalView: UIView, index i :Int) -> UIView {
+        //複製用のViewを定義
         let genCardView = UIView(frame: originalView.frame)
-        genCardView.frame.origin.x = genCardView.frame.origin.x + (self.view.frame.size.width) * CGFloat(i)
+        //位置の設定
+        genCardView.frame.origin.x = genCardView.frame.origin.x + pageWidth * CGFloat(i)
+        //スタイルの設定いろいろ
         genCardView.layer.borderWidth = originalView.layer.borderWidth
         genCardView.layer.backgroundColor = originalView.layer.backgroundColor
         genCardView.layer.borderColor = originalView.layer.borderColor
@@ -327,6 +347,7 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         
         upperPageLabel.text = "\(upperCurrentPage) / \(upperCardString.count)"
         lowerPageLabel.text = "\(lowerCurrentPage) / \(lowerCardString.count)"
+        
     }
 
 }

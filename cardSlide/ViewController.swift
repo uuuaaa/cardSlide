@@ -33,31 +33,23 @@ class ViewController: UIViewController, UIScrollViewDelegate {
 
     
     
-//    var upperCardNumber : Int = 0
     var upperCardString :[[String]] = []
-//    var lowerCardNumber : Int = 0
     var lowerCardString :[[String]] = []
     var pageWidth :CGFloat = 0
+    var pageHeight :CGFloat = 0
     let pageMargin :Float = 20
+    var isPortrait :Bool = true
+    var isLayout :Bool = false
     
     //起動時
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        //NavigationControllerの初期非表示
-//        self.navigationController?.navigationBarHidden = true
-//        self.navigationController?.toolbarHidden = true
-//        toolbar.hidden = true
         
         //初期値設定
         upperCardString = [["Label1","Label2","TextData"],
             ["X2","U","aaaaaaaaaaaaaaaaaaaaa"]]
         lowerCardString = [["Label1","Label2","TextData"],["X2","L","aaaaaaaaaaaa"]]
 
-        //ScrollViewサイズ設定
-        settingScrollView()
-        //page生成
-//        generateView()
         
         //StoryBoardで生成したViewを隠す
         upperCardView.hidden = true
@@ -70,7 +62,7 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         // インスタンス生成
         let defaults = NSUserDefaults.standardUserDefaults()
         var upperFileName : String
-        var lowerFileName :String
+        var lowerFileName : String
         
         //delegateの設定
         upperScrollView.delegate = self
@@ -82,6 +74,7 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         //
         print("call of viewWillAppear")
         
+        //Try Reading filename from UserDefaults
         // Upper:すでに設定でテキストフィールドに入力されている場合
         if defaults.objectForKey("UpperFile") != nil {
             // キーに登録されている文字列を抽出，表示
@@ -94,7 +87,6 @@ class ViewController: UIViewController, UIScrollViewDelegate {
             }
         }
 
-        
         // Lower:すでに設定でテキストフィールドに入力されている場合
         if defaults.objectForKey("LowerFile") != nil {
             // キーに登録されている文字列を抽出，表示
@@ -107,10 +99,8 @@ class ViewController: UIViewController, UIScrollViewDelegate {
             }
         }
         
-
-        //SubViewを削除
-        removeAllSubviews(upperScrollView, jogaiSubView: upperCardView)
-        removeAllSubviews(lowerScrollView, jogaiSubView: lowerCardView)
+        //Pageの設定
+        settingScrollView()
         
         //Viewの生成
         generateView()
@@ -121,6 +111,13 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         
 
         }
+    
+    //位置の不具合を直す
+    override func viewDidAppear(animated: Bool) {
+
+
+//        generateView()
+    }
     
     ///////ドキュメントフォルダのファイルを読み込む
     func readDocument(fileName :String) -> [[String]]? {
@@ -134,7 +131,7 @@ class ViewController: UIViewController, UIScrollViewDelegate {
             
             //読み込み用の変数
             var csvString=""
-            print("Read!")
+            print("Read \(fileName)")
             do{
                 csvString = try NSString(contentsOfFile: csvPath, encoding: NSUTF8StringEncoding) as String
                 
@@ -165,29 +162,75 @@ class ViewController: UIViewController, UIScrollViewDelegate {
 
     //ScrollViewの設定
     func settingScrollView () {
+        
+        print("Setting View Size")
+        
         //Page幅の設定
         //pageWidth = self.view.frame.size.width
         pageWidth = upperCardView.frame.size.width + CGFloat(pageMargin)
         
+        //pageHeight
+        pageHeight = upperCardView.frame.size.height + CGFloat(pageMargin)
+        
         //ScrollViewのサイズ設定
-        upperScrollView.bounds = CGRectMake(0, 0, pageWidth, upperScrollView.frame.height)
-        lowerScrollView.bounds = CGRectMake(0, 0, pageWidth, lowerScrollView.frame.height)
-        upperScrollView.frame.size.width = pageWidth
+        
+        if isPortrait {
+            //Portraitの時
+            upperScrollView.bounds = CGRectMake(0, 0, pageWidth, upperScrollView.frame.height)
+            lowerScrollView.bounds = CGRectMake(0, 0, pageWidth, lowerScrollView.frame.height)
+//            upperScrollView.frame.size.width = pageWidth
+//            lowerScrollView.frame.size.width = pageWidth
+            upperScrollView.frame = upperScrollView.bounds
+            
+            //Bounceの設定
+            upperScrollView.alwaysBounceVertical = false
+            upperScrollView.alwaysBounceHorizontal = true
+            lowerScrollView.alwaysBounceVertical = false
+            lowerScrollView.alwaysBounceHorizontal = true
+            
+        } else {
+            //Landscapeの時
+            upperScrollView.bounds = CGRectMake(0, 0, upperScrollView.frame.width, pageHeight)
+            lowerScrollView.bounds = CGRectMake(0, 0, lowerScrollView.frame.width, pageHeight)
+//            upperScrollView.frame.size.height = pageHeight
+//            lowerScrollView.frame.size.height = pageHeight
+            upperScrollView.frame = upperScrollView.bounds
+            
+            //Bounceの設定
+            upperScrollView.alwaysBounceVertical = true
+            upperScrollView.alwaysBounceHorizontal = false
+            lowerScrollView.alwaysBounceVertical = true
+            lowerScrollView.alwaysBounceHorizontal = false
+
+        }
         
         //はみ出したカードも表示
         upperScrollView.clipsToBounds = false
         lowerScrollView.clipsToBounds = false
         
     }
+    
     //ScrollViewの中のPage生成
     func generateView () {
         
+        
+        //SubViewを削除
+        removeAllSubviews(upperScrollView, jogaiSubView: upperCardView)
+        removeAllSubviews(lowerScrollView, jogaiSubView: lowerCardView)
+
+        
         //コンテンツ量に合わせてScrollViewのサイズを確保
-        upperScrollView.contentSize = CGSizeMake(pageWidth * CGFloat(upperCardString.count), upperScrollView.frame.height)
-        lowerScrollView.contentSize = CGSizeMake(pageWidth * CGFloat(lowerCardString.count), lowerScrollView.frame.height)
+        if isPortrait {
+            upperScrollView.contentSize = CGSizeMake(pageWidth * CGFloat(upperCardString.count), upperScrollView.frame.height)
+            lowerScrollView.contentSize = CGSizeMake(pageWidth * CGFloat(lowerCardString.count), lowerScrollView.frame.height)
+        } else {
+            upperScrollView.contentSize = CGSizeMake(upperScrollView.frame.width, pageHeight * CGFloat(upperCardString.count) )
+            lowerScrollView.contentSize = CGSizeMake(lowerScrollView.frame.width, pageHeight * CGFloat(lowerCardString.count))
+        }
 
         
         //viewの生成(Upper)
+        print("generate view")
         
         for i in 0 ..< upperCardString.count {
 
@@ -219,7 +262,6 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         
         //viewの生成(lower)
         for i in 0 ..< lowerCardString.count {
-//        for var i = 0; i < lowerCardString.count; i++ {
 
             //CardViewを複製
             let genCardView = duplicateCardView(lowerCardView, index: i)
@@ -246,10 +288,12 @@ class ViewController: UIViewController, UIScrollViewDelegate {
             cardText.text = lowerCardString[i][2]
             
         }
-        print("generate view")
+        
         //最初の表示位置の初期化
-        upperScrollView.contentOffset = CGPointMake(upperScrollView.contentOffset.x, 0);
-        lowerScrollView.contentOffset = CGPointMake(lowerScrollView.contentOffset.x, 0);
+        print("Position Reset")
+        upperScrollView.contentOffset = CGPointMake(0, 0);
+        lowerScrollView.contentOffset = CGPointMake(0, 0);
+        
 
     }
     
@@ -276,7 +320,11 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         //複製用のViewを定義
         let genCardView = UIView(frame: originalView.frame)
         //位置の設定
-        genCardView.frame.origin.x = genCardView.frame.origin.x + pageWidth * CGFloat(i)
+        if isPortrait {
+            genCardView.frame.origin.x = genCardView.frame.origin.x + pageWidth * CGFloat(i)
+        } else {
+            genCardView.frame.origin.y = genCardView.frame.origin.y + pageHeight * CGFloat(i)
+        }
         //スタイルの設定いろいろ
         genCardView.layer.borderWidth = originalView.layer.borderWidth
         genCardView.layer.backgroundColor = originalView.layer.backgroundColor
@@ -311,11 +359,14 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         return cardText
     }
     
-    
-    //Windowをタッチしたら、ツールバーの表示・非表示を切り替える
+    //////////動きに合わせて -- Touch Events
+    ///////////////////
+    //Windowをタッチしたら、ツールバーの表示・非表示を切り替える --Switch Toolbar hidden
     @IBAction func windowTouch(sender: AnyObject) {
 
         toolbar.hidden = !toolbar.hidden
+        
+
     }
 
     
@@ -334,19 +385,47 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         print("ScrollViewStop")
     }
     
-    //Page数の表示
+    //Page数の表示 --Display Page Number
     func scrollViewDidScroll(scrollView: UIScrollView) {
         //Page数を取得して表示
-        let upperPageWidth = upperScrollView.frame.size.width
-        let upperCurrentPage = Int(floor((upperScrollView.contentOffset.x - upperPageWidth / 2) / upperPageWidth ) + 2)
-
-        let lowerPageWidth = lowerScrollView.frame.size.width
-        let lowerCurrentPage = Int(floor((lowerScrollView.contentOffset.x - lowerPageWidth / 2) / lowerPageWidth ) + 2)
+        var upperCurrentPage = 0
+        var lowerCurrentPage = 0
         
+        if isPortrait {
+            upperCurrentPage = Int(floor((upperScrollView.contentOffset.x - pageWidth / 2) / pageWidth ) + 2)
+            lowerCurrentPage = Int(floor((lowerScrollView.contentOffset.x - pageWidth / 2) / pageWidth ) + 2)
+        } else {
+            upperCurrentPage = Int(floor((upperScrollView.contentOffset.y - pageHeight / 2) / pageHeight ) + 2)
+            lowerCurrentPage = Int(floor((lowerScrollView.contentOffset.y - pageHeight / 2) / pageHeight ) + 2)
+        }
         upperPageLabel.text = "\(upperCurrentPage) / \(upperCardString.count)"
         lowerPageLabel.text = "\(lowerCurrentPage) / \(lowerCardString.count)"
         
     }
 
+    //デバイスの回転（横向き） --Rotate Device
+    override func willTransitionToTraitCollection(newCollection: UITraitCollection, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+
+        isLayout = false
+        //デバイスの向きを確認
+        if self.view.frame.size.width < self.view.frame.size.height {
+            //LandScapeの場合
+            isPortrait = false
+
+            settingScrollView()
+            generateView()
+            
+        } else {
+            //Portraitの場合
+
+            isPortrait = true
+
+            settingScrollView()
+            generateView()
+
+        }
+    }
+    
+    
 }
 
